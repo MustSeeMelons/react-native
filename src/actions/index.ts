@@ -1,3 +1,3 @@
-import { IAskForPermission, ISetPositionData, IShowError, ISetLoading } from "./globalActions";
+import { IAskForPermission, ISetPositionData, IShowError, ISetLoading, ISetWeather } from "./globalActions";
 
-export type Action = IAskForPermission | ISetPositionData | IShowError | ISetLoading;
+export type Action = IAskForPermission | ISetPositionData | IShowError | ISetLoading | ISetWeather;

@@ -1,10 +1,12 @@
 import GeoLocation from "react-native-geolocation-service";
+import { IProcessedWeatherData } from "../definitions/storeDefinitions";
 
 export enum GlobalActionTypes {
     SET_POSITION_DATA = "SET_POSITION_DATA",
     SHOW_ERROR = "SHOW_ERROR",
     ASK_FOR_PERMISSION = "ASK_FOR_PERMISSION",
-    SET_LOADING = "SET_LOADING"
+    SET_LOADING = "SET_LOADING",
+    SET_WEATHER = "SET_WEATHER"
 }
 
 export interface ISetPositionData {
@@ -71,3 +73,18 @@ export const setLoadingActionCreator = (value: boolean): ISetLoading => {
     }
 }
 
+export interface ISetWeather {
+    type: GlobalActionTypes.SET_WEATHER,
+    payload: {
+        data: IProcessedWeatherData
+    }
+}
+
+export const setWeatherDataActionCreator = (data: IProcessedWeatherData): ISetWeather => {
+    return {
+        type: GlobalActionTypes.SET_WEATHER,
+        payload: {
+            data
+        }
+    }
+}

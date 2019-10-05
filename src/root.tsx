@@ -1,16 +1,19 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native"
-import { setLoadingActionCreator, setErrorActionCreator } from './actions/globalActions';
+import { StyleSheet, View, Text, ScrollView } from "react-native"
+import { setLoadingActionCreator, setErrorActionCreator, setWeatherDataActionCreator } from './actions/globalActions';
 import { connect } from "react-redux";
 import { store } from "./store/store";
-import { State } from "./definitions/storeDefinitions";
+import { State, IProcessedWeatherData } from "./definitions/storeDefinitions";
 import { Spinner } from "./components/spinner";
-import { checkLocationPermission } from "./services/permissionService";
 import { getLocation } from "./services/locationService";
 import { weatherApi } from "./services/apiService";
+import { processWeatherData } from "./services/weatherDataService";
+import { formatNumber } from "./utils";
+import Constants from "expo-constants";
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: Constants.statusBarHeight,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
@@ -21,20 +24,13 @@ const styles = StyleSheet.create({
 export interface IRootProps {
     isLoading: boolean;
     displayError: boolean;
+    data: IProcessedWeatherData;
 }
 
 const Root: React.FC<IRootProps> = (props) => {
-
-    // Check if we have permission
-    // Ask for permission, if not
-    // Show it to the mate
-
     useEffect(() => {
         (async () => {
             try {
-                // TODO looks like this is not needed?
-                // await checkLocationPermission();
-
                 const position: Position = await getLocation();
 
                 const weatherData = await weatherApi.getForecastData(
@@ -42,8 +38,9 @@ const Root: React.FC<IRootProps> = (props) => {
                     position.coords.longitude
                 );
 
-                console.log(weatherData);
+                const data = processWeatherData(weatherData);
 
+                store.dispatch(setWeatherDataActionCreator(data));
                 store.dispatch(setLoadingActionCreator(false));
             } catch (e) {
                 console.warn(e);
@@ -53,11 +50,41 @@ const Root: React.FC<IRootProps> = (props) => {
         })();
     }, []);
 
+    // TODO make proper components with some style to all if this
+    const renderData = () => {
+        if (!props.isLoading) {
+            const data = props.data;
+
+            const futureTemps = props.data.hourly.map((hourly, index) => {
+                return (
+                    <Text key={index}>{`${hourly.time}: ${formatNumber(hourly.temp)}`}</Text>
+                );
+            });
+
+            const tempsByDay = props.data.future.map((future, index) => {
+                return (
+                    <Text key={index}>{`${future.date}: ${formatNumber(future.minTemp)} => ${formatNumber(future.maxTemp)}`}</Text>
+                );
+            });
+
+            return (
+                <>
+                    <Text>{data.city}</Text>
+                    <Text>{formatNumber(data.current.currTemp)}</Text>
+                    {futureTemps}
+                    {tempsByDay}
+                </>
+            );
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <Spinner visible={props.isLoading} />
-            <Text>Hello mister.</Text>
-            {props.displayError && <Text>Shit hit the fan fam</Text>}
+            <ScrollView >
+                <Spinner visible={props.isLoading} />
+                {renderData()}
+                {props.displayError && <Text>Shit hit the fan fam</Text>}
+            </ScrollView>
         </View>
     );
 }
@@ -65,7 +92,8 @@ const Root: React.FC<IRootProps> = (props) => {
 const mapStateToProps = (state: State) => {
     return {
         isLoading: state.globalReducer.isLoading,
-        displayError: state.globalReducer.displayError
+        displayError: state.globalReducer.displayError,
+        data: state.globalReducer.processedWeatherData
     }
 }
 

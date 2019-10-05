@@ -3,11 +3,11 @@ import _ from "lodash";
 import { store } from '../store/store';
 import { setErrorActionCreator } from '../actions/globalActions';
 
+// TODO check if we need this, seems location get does the trick on its own
 export const checkLocationPermission = async () => {
     try {
         const result = await Permissions.askAsync(Permissions.LOCATION);
         console.log(result);
-        // TODO: Is this enough, does it even work?
         if (result.status === "granted" || _.get(result, "permissions.location")) {
             return true;
         } else {

@@ -1,6 +1,3 @@
-import { store } from "../store/store";
-import { setErrorActionCreator } from "../actions/globalActions";
-
 export const getLocation = async (): Promise<Position> => {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(

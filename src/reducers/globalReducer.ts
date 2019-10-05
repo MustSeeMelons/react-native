@@ -25,6 +25,11 @@ export const globalReducer = (state: GlobalState = initialGlobalState, action: A
                 ...state,
                 isLoading: action.payload.value
             }
+        case GlobalActionTypes.SET_WEATHER:
+            return {
+                ...state,
+                processedWeatherData: action.payload.data
+            }
         default:
             return state;
     }

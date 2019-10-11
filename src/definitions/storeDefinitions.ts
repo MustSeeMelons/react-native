@@ -2,17 +2,23 @@ import GeoLocation from "react-native-geolocation-service";
 
 export interface IProcessedWeatherData {
     city?: string;
+    timestamp: Date; // Update time
     current?: {
         currTemp: number;
+        sunrise: number;
+        sunset: number;
     },
     hourly: {
         temp: number;
         time: string; // Time of the day
+        icon: string;
     }[],
     future?: {
         date: number;
+        weekDay: number;
         minTemp: number;
         maxTemp: number;
+        icon: string;
         recCount: number; // How many data points were used
     }[];
 }

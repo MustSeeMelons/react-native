@@ -2,8 +2,6 @@ export const getLocation = async (): Promise<Position> => {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
             (position: Position) => {
-                console.log("POSITIONS:");
-                console.log(position);
                 return resolve(position);
             },
             (error: PositionError) => {

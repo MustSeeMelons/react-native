@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native"
+import { StyleSheet, View, Text, ScrollView, StatusBar } from "react-native"
+import { LinearGradient } from "expo-linear-gradient";
 import { setLoadingActionCreator, setErrorActionCreator, setWeatherDataActionCreator } from './actions/globalActions';
 import { connect } from "react-redux";
 import { store } from "./store/store";
@@ -8,17 +9,20 @@ import { Spinner } from "./components/spinner";
 import { getLocation } from "./services/locationService";
 import { weatherApi } from "./services/apiService";
 import { processWeatherData } from "./services/weatherDataService";
-import { formatNumber } from "./utils";
 import Constants from "expo-constants";
+import { Header } from "./components/header/header";
+import { Hours } from "./components/hours/hours";
+import { Daily } from "./components/daily/daily";
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: Constants.statusBarHeight,
+    rootView: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: "space-around",
     },
+    contentContainer: {
+        paddingTop: Constants.statusBarHeight,
+    }
 });
 
 export interface IRootProps {
@@ -46,45 +50,40 @@ const Root: React.FC<IRootProps> = (props) => {
                 console.warn(e);
                 store.dispatch(setErrorActionCreator(true));
             }
-
         })();
     }, []);
 
-    // TODO make proper components with some style to all if this
-    const renderData = () => {
-        if (!props.isLoading) {
-            const data = props.data;
-
-            const futureTemps = props.data.hourly.map((hourly, index) => {
-                return (
-                    <Text key={index}>{`${hourly.time}: ${formatNumber(hourly.temp)}`}</Text>
-                );
-            });
-
-            const tempsByDay = props.data.future.map((future, index) => {
-                return (
-                    <Text key={index}>{`${future.date}: ${formatNumber(future.minTemp)} => ${formatNumber(future.maxTemp)}`}</Text>
-                );
-            });
-
-            return (
-                <>
-                    <Text>{data.city}</Text>
-                    <Text>{formatNumber(data.current.currTemp)}</Text>
-                    {futureTemps}
-                    {tempsByDay}
-                </>
-            );
-        }
-    }
-
     return (
-        <View style={styles.container}>
-            <ScrollView >
-                <Spinner visible={props.isLoading} />
-                {renderData()}
-                {props.displayError && <Text>Shit hit the fan fam</Text>}
-            </ScrollView>
+        <View style={styles.rootView}>
+            <LinearGradient
+                style={{
+                    flexGrow: 1
+                }}
+                colors={["#5281cc", "#78a4eb", "#349beb"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }
+                }
+            >
+                <View style={styles.contentContainer}>
+                    {/* Status bar does not seem friendly at all */}
+                    <StatusBar translucent={true} hidden={false} barStyle="light-content" />
+
+                    <ScrollView>
+                        <Spinner visible={props.isLoading} />
+                        {!props.isLoading && <>
+                            <Header
+                                city={props.data.city}
+                                temp={props.data.current.currTemp}
+                                timestamp={props.data.timestamp}
+                            />
+                            <Hours data={props.data.hourly} />
+                            <Daily data={props.data.future} />
+                        </>}
+                        {/* Make err component */}
+                        {props.displayError && <Text>Shit hit the fan fam</Text>}
+                    </ScrollView>
+                </View>
+            </LinearGradient>
         </View>
     );
 }

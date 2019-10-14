@@ -107,3 +107,5 @@ export const getApiWeatherIcon = (code: string) => {
             return "ios-warning"
     }
 }
+
+export const HOUR_FORMAT = "HH:mm";

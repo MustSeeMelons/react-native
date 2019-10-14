@@ -18,12 +18,17 @@ const styles = StyleSheet.create({
         color: "#ffffff",
     },
     cityStyle: {
-        fontSize: 36,
-        fontWeight: "500",
+        fontSize: 34,
+        fontWeight: "300",
         color: "#ffffff",
     },
     dateStyle: {
         fontSize: 20,
+        fontWeight: "400",
+        color: "#ffffff",
+    },
+    descriptionStyle: {
+        fontSize: 16,
         fontWeight: "400",
         color: "#ffffff",
     }
@@ -33,6 +38,7 @@ export interface HeaderProps {
     city: string;
     temp: number;
     timestamp: Date;
+    description: string;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
@@ -54,8 +60,9 @@ const Header: React.FC<HeaderProps> = (props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.dateStyle}>{currTime.format("MMM Do, HH:mm")}</Text>
             <Text style={styles.cityStyle}>{props.city}</Text>
+            <Text style={styles.dateStyle}>{currTime.format("MMM Do, HH:mm")}</Text>
+            <Text style={styles.descriptionStyle}>{props.description}</Text>
             <Text style={styles.tempStyle}>{formatNumber(props.temp)} &deg;C</Text>
         </View>
     );

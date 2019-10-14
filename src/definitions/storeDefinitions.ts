@@ -5,8 +5,9 @@ export interface IProcessedWeatherData {
     timestamp: Date; // Update time
     current?: {
         currTemp: number;
-        sunrise: number;
-        sunset: number;
+        sunrise: string;
+        sunset: string;
+        description: string;
     },
     hourly: {
         temp: number;

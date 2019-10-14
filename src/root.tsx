@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, ScrollView, StatusBar } from "react-native"
+import { StyleSheet, View, Text, StatusBar, ScrollView } from "react-native"
 import { LinearGradient } from "expo-linear-gradient";
 import { setLoadingActionCreator, setErrorActionCreator, setWeatherDataActionCreator } from './actions/globalActions';
 import { connect } from "react-redux";
@@ -9,19 +9,18 @@ import { Spinner } from "./components/spinner";
 import { getLocation } from "./services/locationService";
 import { weatherApi } from "./services/apiService";
 import { processWeatherData } from "./services/weatherDataService";
-import Constants from "expo-constants";
 import { Header } from "./components/header/header";
 import { Hours } from "./components/hours/hours";
 import { Daily } from "./components/daily/daily";
+import { SunCycle } from "./components/sunCycle/sunCycle";
+import { NavigationStackOptions } from 'react-navigation-stack';
+// import { ScrollView } from "react-navigation";
 
 const styles = StyleSheet.create({
     rootView: {
         flex: 1,
         alignItems: 'center',
         justifyContent: "space-around",
-    },
-    contentContainer: {
-        paddingTop: Constants.statusBarHeight,
     }
 });
 
@@ -31,26 +30,28 @@ export interface IRootProps {
     data: IProcessedWeatherData;
 }
 
+const fetchData = async () => {
+    try {
+        const position: Position = await getLocation();
+
+        const weatherData = await weatherApi.getForecastData(
+            position.coords.latitude,
+            position.coords.longitude
+        );
+
+        const data = processWeatherData(weatherData);
+
+        store.dispatch(setWeatherDataActionCreator(data));
+        store.dispatch(setLoadingActionCreator(false));
+    } catch (e) {
+        console.warn(e);
+        store.dispatch(setErrorActionCreator(true));
+    }
+};
+
 const Root: React.FC<IRootProps> = (props) => {
     useEffect(() => {
-        (async () => {
-            try {
-                const position: Position = await getLocation();
-
-                const weatherData = await weatherApi.getForecastData(
-                    position.coords.latitude,
-                    position.coords.longitude
-                );
-
-                const data = processWeatherData(weatherData);
-
-                store.dispatch(setWeatherDataActionCreator(data));
-                store.dispatch(setLoadingActionCreator(false));
-            } catch (e) {
-                console.warn(e);
-                store.dispatch(setErrorActionCreator(true));
-            }
-        })();
+        fetchData();
     }, []);
 
     return (
@@ -64,25 +65,26 @@ const Root: React.FC<IRootProps> = (props) => {
                 end={{ x: 1, y: 1 }
                 }
             >
-                <View style={styles.contentContainer}>
-                    {/* Status bar does not seem friendly at all */}
-                    <StatusBar translucent={true} hidden={false} barStyle="light-content" />
-
-                    <ScrollView>
-                        <Spinner visible={props.isLoading} />
-                        {!props.isLoading && <>
-                            <Header
-                                city={props.data.city}
-                                temp={props.data.current.currTemp}
-                                timestamp={props.data.timestamp}
-                            />
-                            <Hours data={props.data.hourly} />
-                            <Daily data={props.data.future} />
-                        </>}
-                        {/* Make err component */}
-                        {props.displayError && <Text>Shit hit the fan fam</Text>}
-                    </ScrollView>
-                </View>
+                <StatusBar translucent barStyle="light-content" backgroundColor="transparent" />
+                <ScrollView>
+                    <Spinner visible={props.isLoading} />
+                    {!props.isLoading && <>
+                        <Header
+                            city={props.data.city}
+                            temp={props.data.current.currTemp}
+                            timestamp={props.data.timestamp}
+                            description={props.data.current.description}
+                        />
+                        <Hours data={props.data.hourly} />
+                        <Daily data={props.data.future} />
+                        <SunCycle
+                            sunrise={props.data.current.sunrise}
+                            sunset={props.data.current.sunset}
+                        />
+                    </>}
+                    {/* Make err component */}
+                    {props.displayError && <Text>Shit hit the fan fam</Text>}
+                </ScrollView>
             </LinearGradient>
         </View>
     );
@@ -97,5 +99,10 @@ const mapStateToProps = (state: State) => {
 }
 
 const ConnectedRoot = connect(mapStateToProps)(Root);
+
+// Type hack
+(ConnectedRoot as any).navigationOptions = {
+
+} as NavigationStackOptions;
 
 export { ConnectedRoot as Root };

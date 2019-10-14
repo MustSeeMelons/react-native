@@ -1,6 +1,8 @@
 import { ForecastData } from "../definitions/apiDefinitions";
 import { IProcessedWeatherData } from "../definitions/storeDefinitions";
 import _ from "lodash";
+import moment from "moment";
+import { HOUR_FORMAT } from "../utils";
 
 const getDayOfTheMonth = (date: number) => {
     return new Date(date * 1000).getDate();
@@ -8,15 +10,6 @@ const getDayOfTheMonth = (date: number) => {
 
 const getDayOfTheWeek = (date: number) => {
     return new Date(date * 1000).getDay();
-}
-
-const getTime = (date: number) => {
-    const data = new Date(date * 1000);
-    const hours = data.getHours();
-    const minutes = data.getMinutes();
-
-    // Minutes will always be 0, but what the heck
-    return `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
 }
 
 const toCelcius = (tempKelvin: number) => {
@@ -44,15 +37,16 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
         if (index === 0) {
             acc.current = {
                 currTemp: toCelcius(curr.main.temp),
-                sunrise: data.city.sunrise,
-                sunset: data.city.sunset
+                sunrise: moment(data.city.sunrise * 1000).format(HOUR_FORMAT),
+                sunset: moment(data.city.sunset * 1000).format(HOUR_FORMAT),
+                description: _.get(curr, "weather[0].description")
             }
         }
 
-        // For hourly graph
+        // For hourly graph 
         acc.hourly.push({
             temp: toCelcius(curr.main.temp),
-            time: getTime(curr.dt),
+            time: moment(curr.dt * 1000).format(HOUR_FORMAT),
             icon: _.get(curr, "weather[0].icon")
         });
 

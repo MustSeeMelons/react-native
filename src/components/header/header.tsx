@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { formatNumber } from "../../utils";
+import { formatNumber, Direction } from "../../utils";
 import moment from "moment";
 
 const styles = StyleSheet.create({
@@ -31,6 +31,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "400",
         color: "#ffffff",
+    },
+    windStyle: {
+        fontSize: 14,
+        color: "#ffffff",
+        fontWeight: "300"
     }
 });
 
@@ -39,6 +44,10 @@ export interface HeaderProps {
     temp: number;
     timestamp: Date;
     description: string;
+    wind: {
+        dir: Direction;
+        speed: number;
+    }
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
@@ -64,6 +73,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             <Text style={styles.dateStyle}>{currTime.format("MMM Do, HH:mm")}</Text>
             <Text style={styles.descriptionStyle}>{props.description}</Text>
             <Text style={styles.tempStyle}>{formatNumber(props.temp)} &deg;C</Text>
+            <Text style={styles.windStyle}>{`${props.wind.dir}, ${formatNumber(props.wind.speed)}m/s`}</Text>
         </View>
     );
 }

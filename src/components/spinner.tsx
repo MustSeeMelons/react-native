@@ -1,13 +1,21 @@
 import React from "react";
-import { Modal, StyleSheet, ActivityIndicator, View } from "react-native";
+import { StyleSheet, ActivityIndicator, View, Dimensions } from "react-native";
+import Constants from "expo-constants";
 
 export interface SpinnerProps {
     visible: boolean;
 }
 
+var { height, width } = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
+        flex: 1,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: width,
+        height: height + Constants.statusBarHeight,
         backgroundColor: "#00000040",
         alignItems: "center",
         justifyContent: "space-around"
@@ -15,11 +23,9 @@ const styles = StyleSheet.create({
 })
 
 const Spinner: React.FC<SpinnerProps> = (props) => {
-    return <Modal transparent={true} visible={props.visible}>
-        <View style={styles.container}>
-            <ActivityIndicator size="large" />
-        </View>
-    </Modal>
+    return (props.visible && <View style={styles.container}>
+        <ActivityIndicator size="large" />
+    </View>);
 }
 
 export { Spinner }

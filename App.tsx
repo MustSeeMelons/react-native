@@ -4,12 +4,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { store } from './src/store/store';
 import { Root } from './src/root';
 import { createAppContainer } from 'react-navigation';
+import { StatusBar } from 'react-native';
 
 // Create stack navigator for all our screens
 const StackNavigator = createStackNavigator({
     root: Root
 }, {
-    initialRouteName: "root"
+    initialRouteName: "root",
+    headerMode: "none"
 });
 
 // TODO: No need for navigation, if status bar doesnt work
@@ -20,7 +22,8 @@ const AppContainer = createAppContainer(StackNavigator);
 export default () => {
     return (
         <Provider store={store}>
-            <Root />
+            <StatusBar translucent backgroundColor="transparent" />
+            <AppContainer />
         </Provider>
     );
 };

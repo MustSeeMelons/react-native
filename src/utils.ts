@@ -108,4 +108,38 @@ export const getApiWeatherIcon = (code: string) => {
     }
 }
 
+export enum Direction {
+    NORTH = "N",
+    NORTH_EAST = "NE",
+    EAST = "E",
+    SOUTH_EAST = "SE",
+    SOUTH = "S",
+    SOUTH_WEST = "SW",
+    WEST = "W",
+    NORTH_WEST = "NW",
+    STONKS = "STONKS" // For testing, should never appear
+}
+
+export const getWindDirection = (degrees: number): Direction => {
+    if (degrees >= 337.5 || degrees < 22.5) {
+        return Direction.NORTH;
+    } else if (degrees >= 22.5 && degrees < 67.5) {
+        return Direction.NORTH_EAST;
+    } else if (degrees >= 67.5 && degrees < 112.5) {
+        return Direction.EAST;
+    } else if (degrees >= 112.5 && degrees < 157.5) {
+        return Direction.SOUTH_EAST;
+    } else if (degrees >= 157.5 && degrees < 202.5) {
+        return Direction.SOUTH;
+    } else if (degrees >= 202.5 && degrees < 247.5) {
+        return Direction.SOUTH_WEST;
+    } else if (degrees >= 247.5 && degrees < 292.5) {
+        return Direction.WEST;
+    } else if (degrees >= 292.5 && degrees < 337.5) {
+        return Direction.NORTH_WEST;
+    } else {
+        return Direction.STONKS;
+    }
+}
+
 export const HOUR_FORMAT = "HH:mm";

@@ -1,4 +1,5 @@
 import GeoLocation from "react-native-geolocation-service";
+import { Direction } from "../utils";
 
 export interface IProcessedWeatherData {
     city?: string;
@@ -8,11 +9,19 @@ export interface IProcessedWeatherData {
         sunrise: string;
         sunset: string;
         description: string;
+        wind: {
+            dir: Direction;
+            speed: number;
+        }
     },
     hourly: {
         temp: number;
         time: string; // Time of the day
         icon: string;
+        wind: {
+            dir: Direction;
+            speed: number;
+        }
     }[],
     future?: {
         date: number;
@@ -21,6 +30,10 @@ export interface IProcessedWeatherData {
         maxTemp: number;
         icon: string;
         recCount: number; // How many data points were used
+        wind: {
+            dir: Direction;
+            speed: number;
+        }
     }[];
 }
 

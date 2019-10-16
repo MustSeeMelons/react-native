@@ -2,7 +2,7 @@ import { ForecastData } from "../definitions/apiDefinitions";
 import { IProcessedWeatherData } from "../definitions/storeDefinitions";
 import _ from "lodash";
 import moment from "moment";
-import { HOUR_FORMAT } from "../utils";
+import { HOUR_FORMAT, getWindDirection } from "../utils";
 
 const getDayOfTheMonth = (date: number) => {
     return new Date(date * 1000).getDate();
@@ -17,8 +17,6 @@ const toCelcius = (tempKelvin: number) => {
 }
 
 // TODO: test this for correctness
-// TODO: add clouds info
-// TODO: add rain info
 
 /**
  * @description Process api data into the format we need
@@ -39,7 +37,11 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
                 currTemp: toCelcius(curr.main.temp),
                 sunrise: moment(data.city.sunrise * 1000).format(HOUR_FORMAT),
                 sunset: moment(data.city.sunset * 1000).format(HOUR_FORMAT),
-                description: _.get(curr, "weather[0].description")
+                description: _.get(curr, "weather[0].description"),
+                wind: {
+                    dir: getWindDirection(curr.wind.deg),
+                    speed: curr.wind.speed
+                }
             }
         }
 
@@ -47,7 +49,11 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
         acc.hourly.push({
             temp: toCelcius(curr.main.temp),
             time: moment(curr.dt * 1000).format(HOUR_FORMAT),
-            icon: _.get(curr, "weather[0].icon")
+            icon: _.get(curr, "weather[0].icon"),
+            wind: {
+                dir: getWindDirection(curr.wind.deg),
+                speed: curr.wind.speed
+            }
         });
 
         // Group max/min temps by date
@@ -60,7 +66,11 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
                     minTemp: toCelcius(curr.main.temp),
                     weekDay: getDayOfTheWeek(curr.dt),
                     recCount: 1,
-                    icon: _.get(curr, "weather[0].icon")
+                    icon: _.get(curr, "weather[0].icon"),
+                    wind: {
+                        dir: getWindDirection(curr.wind.deg),
+                        speed: curr.wind.speed
+                    }
                 });
             } else {
                 const currTemp = toCelcius(curr.main.temp);
@@ -83,7 +93,11 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
                 minTemp: toCelcius(curr.main.temp),
                 weekDay: getDayOfTheWeek(curr.dt),
                 icon: _.get(curr, "weather[0].icon"),
-                recCount: 1
+                recCount: 1,
+                wind: {
+                    dir: getWindDirection(curr.wind.deg),
+                    speed: curr.wind.speed
+                }
             });
         }
 

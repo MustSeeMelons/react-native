@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, StatusBar, ScrollView } from "react-native"
+import { Text, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient";
 import { setLoadingActionCreator, setErrorActionCreator, setWeatherDataActionCreator } from './actions/globalActions';
 import { connect } from "react-redux";
@@ -14,15 +14,8 @@ import { Hours } from "./components/hours/hours";
 import { Daily } from "./components/daily/daily";
 import { SunCycle } from "./components/sunCycle/sunCycle";
 import { NavigationStackOptions } from 'react-navigation-stack';
-// import { ScrollView } from "react-navigation";
-
-const styles = StyleSheet.create({
-    rootView: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: "space-around",
-    }
-});
+import { ScrollView } from "react-navigation";
+import Constants from "expo-constants";
 
 export interface IRootProps {
     isLoading: boolean;
@@ -55,25 +48,28 @@ const Root: React.FC<IRootProps> = (props) => {
     }, []);
 
     return (
-        <View style={styles.rootView}>
-            <LinearGradient
-                style={{
-                    flexGrow: 1
-                }}
-                colors={["#5281cc", "#78a4eb", "#349beb"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }
-                }
-            >
-                <StatusBar translucent barStyle="light-content" backgroundColor="transparent" />
+        <LinearGradient
+            style={{
+                flexGrow: 1
+            }}
+            colors={["#5281cc", "#78a4eb", "#349beb"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }
+            }
+        >
+            <Spinner visible={props.isLoading} />
+            <View style={{
+                flexGrow: 1,
+                paddingTop: Constants.statusBarHeight
+            }}>
                 <ScrollView>
-                    <Spinner visible={props.isLoading} />
                     {!props.isLoading && <>
                         <Header
                             city={props.data.city}
                             temp={props.data.current.currTemp}
                             timestamp={props.data.timestamp}
                             description={props.data.current.description}
+                            wind={props.data.current.wind}
                         />
                         <Hours data={props.data.hourly} />
                         <Daily data={props.data.future} />
@@ -82,11 +78,11 @@ const Root: React.FC<IRootProps> = (props) => {
                             sunset={props.data.current.sunset}
                         />
                     </>}
-                    {/* Make err component */}
                     {props.displayError && <Text>Shit hit the fan fam</Text>}
                 </ScrollView>
-            </LinearGradient>
-        </View>
+            </View>
+
+        </LinearGradient>
     );
 }
 

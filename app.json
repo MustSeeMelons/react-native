@@ -25,6 +25,17 @@
         ],
         "ios": {
             "supportsTablet": true
+        },
+        "androidStatusBar": {
+            "backgroundColor": "#00000000"
+        },
+        "androidNavigationBar": {
+            "visible": true,
+            "backgroundColor": "#000000",
+            "barStyle": "light-content"
+        },
+        "android": {
+            "package": "com.strautins.rn_weather"
         }
     }
 }

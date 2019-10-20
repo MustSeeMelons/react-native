@@ -30,6 +30,11 @@ export const globalReducer = (state: GlobalState = initialGlobalState, action: A
                 ...state,
                 processedWeatherData: action.payload.data
             }
+        case GlobalActionTypes.REFRESH:
+            return {
+                ...state,
+                isRefreshing: action.payload.value
+            }
         default:
             return state;
     }

@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Animated, ViewProperties, Dimensions, Easing } from "react-native";
-import { SlideViewType } from "../../definitions";
+import { SlideViewType, SLIDE_TIME } from "../../definitions";
+import { connect } from "react-redux";
+import { State } from "../../definitions/storeDefinitions";
 
-export interface SlideViewProps extends ViewProperties {
-    slideType: SlideViewType
+export interface ISlideViewProps extends ViewProperties {
+    slideType: SlideViewType;
 }
 
-export const SlideView: React.FC<SlideViewProps> = (props) => {
+interface IPropsFromState {
+    isRefreshing: boolean;
+}
+
+/**
+ * Weather data container. Slides in on mount, slides out on REFRESH action.
+ */
+const SlideView: React.FC<ISlideViewProps & IPropsFromState> = (props) => {
     const { width, height } = Dimensions.get("screen");
     let startPosition: number;
 
@@ -49,22 +58,23 @@ export const SlideView: React.FC<SlideViewProps> = (props) => {
             {
                 easing: Easing.elastic(0.8),
                 toValue: 0,
-                duration: 500,
+                duration: SLIDE_TIME,
             }
         ).start();
+    }, []);
 
-        // wont work, as unmounts happens before the animation
-        return () => {
+    useEffect(() => {
+        if (props.isRefreshing) {
             Animated.timing(
                 position,
                 {
                     easing: Easing.elastic(0.8),
                     toValue: startPosition,
-                    duration: 500,
+                    duration: SLIDE_TIME,
                 }
             ).start();
         }
-    }, []);
+    }, [props.isRefreshing]);
 
     return (
         <Animated.View
@@ -79,3 +89,13 @@ export const SlideView: React.FC<SlideViewProps> = (props) => {
         </Animated.View>
     );
 }
+
+const mapStateToProps = (state: State) => {
+    return {
+        isRefreshing: state.globalReducer.isRefreshing
+    }
+}
+
+const ConnectedSlideView = connect(mapStateToProps)(SlideView);
+
+export { ConnectedSlideView as SlideView }

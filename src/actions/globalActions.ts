@@ -4,8 +4,9 @@ import { IProcessedWeatherData } from "../definitions/storeDefinitions";
 export enum GlobalActionTypes {
     SET_POSITION_DATA = "SET_POSITION_DATA",
     SHOW_ERROR = "SHOW_ERROR",
+    REFRESH = "REFRESH", // Notify our slide view to do the slide out
     CLEAR_WEATHER = "CLEAR_WEATHER",
-    SET_LOADING = "SET_LOADING",
+    SET_LOADING = "SET_LOADING", // API call in progress flag
     SET_WEATHER = "SET_WEATHER"
 }
 
@@ -79,6 +80,22 @@ export const setWeatherDataActionCreator = (data: IProcessedWeatherData): ISetWe
         type: GlobalActionTypes.SET_WEATHER,
         payload: {
             data
+        }
+    }
+}
+
+export interface IRefresh {
+    type: GlobalActionTypes.REFRESH,
+    payload: {
+        value: boolean
+    }
+}
+
+export const refreshActionCreator = (value: boolean): IRefresh => {
+    return {
+        type: GlobalActionTypes.REFRESH,
+        payload: {
+            value
         }
     }
 }

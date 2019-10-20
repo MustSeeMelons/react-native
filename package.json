@@ -34,7 +34,7 @@
         "@types/react-redux": "7.1.4",
         "@types/expo": "32.0.13",
         "babel-preset-expo": "^7.0.0",
-        "typescript": "^3.4.5",
+        "typescript": "3.2.2",
         "@types/react-navigation": "3.0.8"
     },
     "private": true

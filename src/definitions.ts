@@ -4,3 +4,5 @@ export enum SlideViewType {
     RIGHT,
     BOTTOM
 }
+
+export const SLIDE_TIME = 500;

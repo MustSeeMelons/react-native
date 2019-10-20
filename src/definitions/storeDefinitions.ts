@@ -42,6 +42,7 @@ export interface GlobalState {
     displayError: boolean;
     isLoading: boolean;
     processedWeatherData: IProcessedWeatherData;
+    isRefreshing: boolean;
 }
 
 export const initialGlobalState = {
@@ -49,7 +50,8 @@ export const initialGlobalState = {
     displayError: false,
     askForPermission: false,
     isLoading: true,
-    processedWeatherData: null
+    processedWeatherData: null,
+    isRefreshing: false
 }
 
 export interface State {

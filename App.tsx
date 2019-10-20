@@ -10,9 +10,9 @@ import { StatusBar } from 'react-native';
 const StackNavigator = createStackNavigator({
     root: Root
 }, {
-    initialRouteName: "root",
-    headerMode: "none"
-});
+        initialRouteName: "root",
+        headerMode: "none"
+    });
 
 // TODO: No need for navigation, if status bar doesnt work
 // Create a container for our navigator

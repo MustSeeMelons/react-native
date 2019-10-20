@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { formatNumber, Direction } from "../../utils";
 import moment from "moment";
 import { SlideView } from "../animated/slideView";

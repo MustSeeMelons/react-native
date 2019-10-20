@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, RefreshControl } from "react-native"
 import { LinearGradient } from "expo-linear-gradient";
-import { setLoadingActionCreator, setErrorActionCreator, setWeatherDataActionCreator, clearWeatherActionCreator, IClearWeather } from './actions/globalActions';
+import { setLoadingActionCreator, setErrorActionCreator, setWeatherDataActionCreator, clearWeatherActionCreator, IClearWeather, refreshActionCreator } from './actions/globalActions';
 import { connect } from "react-redux";
 import { store } from "./store/store";
 import { State, IProcessedWeatherData } from "./definitions/storeDefinitions";
@@ -19,6 +19,7 @@ import Constants from "expo-constants";
 import { ErrorMessage } from "./components/error/error";
 import { isWeatherDataLoaded } from "./selectors/globalSelectors";
 import { Dispatch } from "redux";
+import { SLIDE_TIME } from "./definitions";
 
 export interface IRootProps {
     isLoading: boolean;
@@ -26,6 +27,8 @@ export interface IRootProps {
     data: IProcessedWeatherData;
     isWeatherDataLoaded: boolean;
     clear: () => void;
+    refreshBegin: () => void;
+    refreshEnd: () => void;
 }
 
 const fetchData = async () => {
@@ -57,11 +60,16 @@ const Root: React.FC<IRootProps> = (props) => {
     // useCallback - lock multiple refreshes from happening
     const onRefresh = useCallback(async () => {
         setIsRefreshing(true);
-        props.clear();
 
-        await fetchData();
+        props.refreshBegin();
 
-        setIsRefreshing(false);
+        setTimeout(async () => {
+            props.refreshEnd();
+            props.clear();
+            await fetchData();
+
+            setIsRefreshing(false);
+        }, SLIDE_TIME);
     }, [isRefreshing]);
 
     return (
@@ -119,7 +127,9 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        clear: () => { dispatch(clearWeatherActionCreator()) }
+        clear: () => { dispatch(clearWeatherActionCreator()) },
+        refreshBegin: () => { dispatch(refreshActionCreator(true)) },
+        refreshEnd: () => { dispatch(refreshActionCreator(false)) }
     }
 }
 

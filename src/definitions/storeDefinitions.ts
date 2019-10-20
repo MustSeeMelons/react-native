@@ -41,7 +41,6 @@ export interface GlobalState {
     position: GeoLocation.GeoPosition;
     displayError: boolean;
     isLoading: boolean;
-    askForPermission: boolean;
     processedWeatherData: IProcessedWeatherData;
 }
 

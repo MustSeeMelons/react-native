@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         left: 0,
         width: width,
         height: height + Constants.statusBarHeight,
-        backgroundColor: "#00000040",
+        backgroundColor: "#00000070",
         alignItems: "center",
         justifyContent: "space-around"
     }
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 
 const Spinner: React.FC<SpinnerProps> = (props) => {
     return (props.visible && <View style={styles.container}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color="#349beb" size="large" />
     </View>);
 }
 

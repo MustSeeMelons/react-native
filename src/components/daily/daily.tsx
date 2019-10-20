@@ -1,6 +1,8 @@
 import React from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { formatNumber, getDayName, remapNumberRange } from "../../utils";
+import { SlideView } from "../animated/slideView";
+import { SlideViewType } from "../../definitions";
 
 const styles = StyleSheet.create({
     container: {
@@ -73,7 +75,7 @@ const Daily: React.FC<DailyProps> = (props) => {
     });
 
     return (
-        <View style={styles.container}>
+        <SlideView slideType={SlideViewType.LEFT} style={styles.container}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {props.data.map((data, index) => {
                     return (
@@ -100,7 +102,7 @@ const Daily: React.FC<DailyProps> = (props) => {
                     );
                 })}
             </ScrollView>
-        </View>
+        </SlideView>
     );
 }
 

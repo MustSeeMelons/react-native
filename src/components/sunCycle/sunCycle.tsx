@@ -1,6 +1,8 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Feather } from "expo-vector-icons";
+import { SlideView } from "../animated/slideView";
+import { SlideViewType } from "../../definitions";
 
 const styles = StyleSheet.create({
     container: {
@@ -30,7 +32,7 @@ export interface SunCycleProps {
 
 const SunCycle: React.FC<SunCycleProps> = (props) => {
     return (
-        <View style={styles.container}>
+        <SlideView slideType={SlideViewType.BOTTOM} style={styles.container}>
             <View style={styles.cycleContainer}>
                 <Feather name="sunrise" size={42} color="white" />
                 <Text style={styles.timeText}>{props.sunrise}</Text>
@@ -39,7 +41,7 @@ const SunCycle: React.FC<SunCycleProps> = (props) => {
                 <Feather name="sunset" size={42} color="white" />
                 <Text style={styles.timeText}>{props.sunset}</Text>
             </View>
-        </View>
+        </SlideView>
     );
 };
 

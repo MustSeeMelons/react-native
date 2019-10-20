@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { formatNumber, Direction } from "../../utils";
 import moment from "moment";
+import { SlideView } from "../animated/slideView";
+import { SlideViewType } from "../../definitions";
 
 const styles = StyleSheet.create({
     container: {
@@ -68,13 +70,13 @@ const Header: React.FC<HeaderProps> = (props) => {
     }, []);
 
     return (
-        <View style={styles.container}>
+        <SlideView slideType={SlideViewType.LEFT} style={styles.container}>
             <Text style={styles.cityStyle}>{props.city}</Text>
             <Text style={styles.dateStyle}>{currTime.format("MMM Do, HH:mm")}</Text>
             <Text style={styles.descriptionStyle}>{props.description}</Text>
             <Text style={styles.tempStyle}>{formatNumber(props.temp)} &deg;C</Text>
             <Text style={styles.windStyle}>{`${props.wind.dir}, ${formatNumber(props.wind.speed)}m/s`}</Text>
-        </View>
+        </SlideView>
     );
 }
 

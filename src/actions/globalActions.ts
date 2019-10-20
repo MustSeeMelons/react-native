@@ -4,7 +4,7 @@ import { IProcessedWeatherData } from "../definitions/storeDefinitions";
 export enum GlobalActionTypes {
     SET_POSITION_DATA = "SET_POSITION_DATA",
     SHOW_ERROR = "SHOW_ERROR",
-    ASK_FOR_PERMISSION = "ASK_FOR_PERMISSION",
+    CLEAR_WEATHER = "CLEAR_WEATHER",
     SET_LOADING = "SET_LOADING",
     SET_WEATHER = "SET_WEATHER"
 }
@@ -41,19 +41,13 @@ export const setErrorActionCreator = (value: boolean): IShowError => {
     }
 }
 
-export interface IAskForPermission {
-    type: GlobalActionTypes.ASK_FOR_PERMISSION,
-    payload: {
-        value: boolean
-    }
+export interface IClearWeather {
+    type: GlobalActionTypes.CLEAR_WEATHER
 }
 
-export const askForPermissionActionCreator = (value: boolean): IAskForPermission => {
+export const clearWeatherActionCreator = (): IClearWeather => {
     return {
-        type: GlobalActionTypes.ASK_FOR_PERMISSION,
-        payload: {
-            value
-        }
+        type: GlobalActionTypes.CLEAR_WEATHER
     }
 }
 

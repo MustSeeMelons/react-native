@@ -10,11 +10,13 @@ export const weatherApi = {
     getForecastData: async (latitude: number, longitude: number): Promise<ForecastData> => {
         const response = await Axios.get(`${FORECAST_API_URL}?lat=${latitude}&lon=${longitude}&appId=${API_KEY}`, config);
 
-        // Creating a noticable delay
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(response.data as ForecastData)
-            }, 3000);
-        });
+        // For a delay
+        // return new Promise((resolve) => {
+        //     setTimeout(() => {
+        //         resolve(response.data as ForecastData)
+        //     }, 3000);
+        // });
+
+        return response.data as ForecastData;
     }
 }

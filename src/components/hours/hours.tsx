@@ -2,6 +2,8 @@ import React from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { Ionicons } from "expo-vector-icons";
 import { formatNumber, getApiWeatherIcon } from "../../utils";
+import { SlideView } from "../animated/slideView";
+import { SlideViewType } from "../../definitions";
 
 const styles = StyleSheet.create({
     container: {
@@ -53,7 +55,7 @@ const Hours: React.FC<HoursProps> = (props) => {
     });
 
     return (
-        <View style={styles.container}>
+        <SlideView slideType={SlideViewType.RIGHT} style={styles.container}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {props.data.map((data, index) => {
                     return (
@@ -73,7 +75,7 @@ const Hours: React.FC<HoursProps> = (props) => {
                     );
                 })}
             </ScrollView>
-        </View>
+        </SlideView>
     );
 }
 

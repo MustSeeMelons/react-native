@@ -15,10 +15,10 @@ export const globalReducer = (state: GlobalState = initialGlobalState, action: A
                 displayError: action.payload.value,
                 isLoading: false
             }
-        case GlobalActionTypes.ASK_FOR_PERMISSION:
+        case GlobalActionTypes.CLEAR_WEATHER:
             return {
                 ...state,
-                askForPermission: action.payload.value
+                processedWeatherData: null
             }
         case GlobalActionTypes.SET_LOADING:
             return {

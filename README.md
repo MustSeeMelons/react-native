@@ -1,5 +1,6 @@
-## TODO:
- - Daily icons
- 
 ### Research 
  - Check permissions
+
+### TODO
+ - Splash Screen
+ - Icon

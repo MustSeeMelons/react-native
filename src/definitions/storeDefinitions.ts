@@ -28,7 +28,10 @@ export interface IProcessedWeatherData {
         weekDay: number;
         minTemp: number;
         maxTemp: number;
-        icon: string;
+        icon: {
+            day: string;
+            night: string;
+        };
         recCount: number; // How many data points were used
         wind: {
             dir: Direction;

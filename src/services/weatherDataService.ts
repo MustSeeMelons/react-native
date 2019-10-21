@@ -2,7 +2,7 @@ import { ForecastData } from "../definitions/apiDefinitions";
 import { IProcessedWeatherData } from "../definitions/storeDefinitions";
 import _ from "lodash";
 import moment from "moment";
-import { HOUR_FORMAT, getWindDirection } from "../utils";
+import { HOUR_FORMAT, getWindDirection, isDay, isThisWorse } from "../utils";
 
 const getDayOfTheMonth = (date: number) => {
     return new Date(date * 1000).getDate();
@@ -15,8 +15,6 @@ const getDayOfTheWeek = (date: number) => {
 const toCelcius = (tempKelvin: number) => {
     return tempKelvin - 273.15;
 }
-
-// TODO: test this for correctness
 
 /**
  * @description Process api data into the format we need
@@ -66,7 +64,10 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
                     minTemp: toCelcius(curr.main.temp),
                     weekDay: getDayOfTheWeek(curr.dt),
                     recCount: 1,
-                    icon: _.get(curr, "weather[0].icon"),
+                    icon: {
+                        day: _.get(curr, "weather[0].icon"),
+                        night: _.get(curr, "weather[0].icon")
+                    },
                     wind: {
                         dir: getWindDirection(curr.wind.deg),
                         speed: curr.wind.speed
@@ -84,7 +85,17 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
 
                 last.recCount++;
 
-                // TODO calculate worse icon for the day
+                const currIcon = _.get(curr, "weather[0].icon");
+
+                if (isDay(curr.dt)) {
+                    if (isThisWorse(last.icon.day, currIcon)) {
+                        last.icon.day = currIcon;
+                    }
+                } else {
+                    if (isThisWorse(last.icon.night, currIcon)) {
+                        last.icon.night = currIcon;
+                    }
+                }
             }
         } else {
             acc.future.push({
@@ -92,7 +103,10 @@ export const processWeatherData = (data: ForecastData): IProcessedWeatherData =>
                 maxTemp: toCelcius(curr.main.temp),
                 minTemp: toCelcius(curr.main.temp),
                 weekDay: getDayOfTheWeek(curr.dt),
-                icon: _.get(curr, "weather[0].icon"),
+                icon: {
+                    day: _.get(curr, "weather[0].icon"),
+                    night: _.get(curr, "weather[0].icon")
+                },
                 recCount: 1,
                 wind: {
                     dir: getWindDirection(curr.wind.deg),

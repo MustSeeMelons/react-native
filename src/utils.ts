@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const formatNumber = (num: number): string => {
     return num.toFixed(2);
 }
@@ -20,6 +22,8 @@ export const getDayName = (index: number) => {
             return "Fri";
         case 6:
             return "Sat";
+        default:
+            return "?"
     }
 }
 
@@ -69,7 +73,6 @@ export const remapNumberRange = (
  * 50d
  * 50n
  * 
- * @param code 
  */
 export const getApiWeatherIcon = (code: string) => {
     switch (code) {
@@ -140,6 +143,23 @@ export const getWindDirection = (degrees: number): Direction => {
     } else {
         return Direction.STONKS;
     }
+}
+
+export const parseWeatherCodeNumber = (code: string): number => {
+    return parseInt(code.substr(0, 2));
+}
+
+/*
+    Returns true if code is worse than currCode
+*/
+export const isThisWorse = (currCode: string, code: string) => {
+    return parseWeatherCodeNumber(currCode) < parseWeatherCodeNumber(code);
+}
+
+export const isDay = (dt: number) => {
+    const h = moment(dt * 1000).hours();
+
+    return h < 18 && h >= 6;
 }
 
 export const HOUR_FORMAT = "HH:mm";

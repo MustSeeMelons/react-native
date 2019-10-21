@@ -5,7 +5,6 @@ export const getLocation = async (): Promise<Position> => {
                 return resolve(position);
             },
             (error: PositionError) => {
-                console.warn("POSITION ERROR");
                 console.warn(error);
                 reject(error);
             },

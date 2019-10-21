@@ -47,12 +47,3 @@ export interface ForecastData {
         dt_txt: "string"
     }[]
 }
-
-// There is more data, but we dont need it
-export interface WeatherData {
-    sys: {
-        sunrise: number;
-        sunset: number;
-    },
-    timezone: number; // shift in seconds from UTC
-}
